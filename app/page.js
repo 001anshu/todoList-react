@@ -1,10 +1,17 @@
 "use client"
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const page = () => {
   const task=useRef(null);
   const dead=useRef(null);
   const[allTask,setallTask]=useState([]);
+  useEffect(()=>{
+    const savedTask=JSON.parse(localStorage.getItem('tasks'))||[];
+    setallTask(savedTask);
+  },[]);
+ 
+
+
   const handesubmit=(e)=>{
     e.preventDefault();
   }
@@ -15,6 +22,7 @@ const page = () => {
     const temp={task:t,deadline:d};
     const prevtask=[temp,...allTask];
     setallTask(prevtask)
+    localStorage.setItem('tasks',JSON.stringify(prevtask))
     console.log(prevtask);
     task.current.value='';
     dead.current.value='';
@@ -29,6 +37,7 @@ const page = () => {
     const cp=[...allTask];
     cp.splice(i,1);
     setallTask(cp);
+    localStorage.setItem('tasks',JSON.stringify(cp))
 
   }
   const tasks=allTask.map((data,i)=>{
@@ -55,7 +64,7 @@ const page = () => {
         </form>
       </div>
       <hr></hr>
-      <div className='bg-slate-400 w-4/5 ml-auto mr-auto '>
+      <div className='bg-slate-400 rounded-lg p-2 w-4/5 ml-auto mr-auto '>
         {allTask.length>0?<ul>{tasks}</ul>:<h5>no task here</h5>}
         
         
